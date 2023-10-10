@@ -1,0 +1,172 @@
+version: "3.7"
+
+services:
+  #
+  #
+  ################ Validators ################
+  #
+  #
+
+  validator:
+    image: ghcr.io/rarimo/rarimo-core:v1.0.6
+    entrypoint: sh -c "rarimo-core start --home=/usr/local/bin/genesis --rpc.laddr tcp://0.0.0.0:26657 --p2p.external-address tcp://validator:26656"
+    volumes:
+      - ./config/validator/config:/usr/local/bin/genesis/config
+      - ./config/validator/data:/usr/local/bin/genesis/data
+    ports:
+      - "26657:26657"
+      - "1317:1317"
+      - "9090:9090"
+      - "8545:8545"
+      - "8546:8546"
+
+  #
+  #
+  ################ TSS ################
+  #
+  #
+
+  tss-1:
+    image: ghcr.io/rarimo/tss-svc:v1.0.6
+    restart: on-failure
+    depends_on:
+      - tss-1-db
+      - validator
+    ports:
+      - "9001:9000"
+      - "1313:1313"
+    volumes:
+      - ./config/tss/tss1.yaml:/config.yaml
+    environment:
+      - KV_VIPER_FILE=/config.yaml
+      - VAULT_PATH=http://vault:8200
+      - VAULT_TOKEN=dev-only-token
+      - MOUNT_PATH=secret
+      - SECRET_PATH=tss1
+      - DAEMON_ARGS=-w 1024
+    ## Uncomment the line below to run in keygen mode
+    #entrypoint: sh -c "tss-svc migrate up && tss-svc run keygen"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run service"
+
+  tss-1-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=tss
+      - POSTGRES_PASSWORD=tss
+      - POSTGRES_DB=tss
+      - PGDATA=/pgdata
+    volumes:
+      - tss-1-data:/pgdata
+
+  tss-2:
+    image: ghcr.io/rarimo/tss-svc:v1.0.6
+    restart: on-failure
+    depends_on:
+      - tss-2-db
+      - validator
+    ports:
+      - "9002:9000"
+    volumes:
+      - ./config/tss/tss2.yaml:/config.yaml
+    environment:
+      - KV_VIPER_FILE=/config.yaml
+      - VAULT_PATH=http://vault:8200
+      - VAULT_TOKEN=dev-only-token
+      - MOUNT_PATH=secret
+      - SECRET_PATH=tss2
+      - DAEMON_ARGS=-w 1024
+    ## Uncomment the line below to run in keygen mode
+    #entrypoint: sh -c "tss-svc migrate up && tss-svc run keygen"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run service"
+
+  tss-2-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=tss
+      - POSTGRES_PASSWORD=tss
+      - POSTGRES_DB=tss
+      - PGDATA=/pgdata
+    volumes:
+      - tss-2-data:/pgdata
+
+  tss-3:
+    image: ghcr.io/rarimo/tss-svc:v1.0.6
+    restart: on-failure
+    depends_on:
+      - tss-3-db
+      - validator
+    ports:
+      - "9003:9000"
+    volumes:
+      - ./config/tss/tss3.yaml:/config.yaml
+    environment:
+      - KV_VIPER_FILE=/config.yaml
+      - VAULT_PATH=http://vault:8200
+      - VAULT_TOKEN=dev-only-token
+      - MOUNT_PATH=secret
+      - SECRET_PATH=tss3
+      - DAEMON_ARGS=-w 1024
+    ## Uncomment the line below to run in keygen mode
+    #entrypoint: sh -c "tss-svc migrate up && tss-svc run keygen"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run service"
+
+  tss-3-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=tss
+      - POSTGRES_PASSWORD=tss
+      - POSTGRES_DB=tss
+      - PGDATA=/pgdata
+    volumes:
+      - tss-3-data:/pgdata
+
+  tss-4:
+    image: ghcr.io/rarimo/tss-svc:v1.0.6
+    restart: on-failure
+    depends_on:
+      - tss-4-db
+      - validator
+    ports:
+      - "9004:9000"
+    volumes:
+      - ./config/tss/tss4.yaml:/config.yaml
+    environment:
+      - KV_VIPER_FILE=/config.yaml
+      - VAULT_PATH=http://vault:8200
+      - VAULT_TOKEN=dev-only-token
+      - MOUNT_PATH=secret
+      - SECRET_PATH=tss4
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run service"
+
+  tss-4-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=tss
+      - POSTGRES_PASSWORD=tss
+      - POSTGRES_DB=tss
+      - PGDATA=/pgdata
+    volumes:
+      - tss-4-data:/pgdata
+
+  #
+  #
+  ################ VAULT ################
+  #
+  #
+
+  vault:
+    image: vault:1.13.3
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: dev-only-token
+    ports:
+      - 8200:8200
+
+volumes:
+  tss-1-data:
+  tss-2-data:
+  tss-3-data:
+  tss-4-data:

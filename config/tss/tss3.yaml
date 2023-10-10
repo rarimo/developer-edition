@@ -1,0 +1,27 @@
+log:
+  disable_sentry: true
+  level: debug
+
+db:
+  url: "postgres://tss:tss@tss-3-db:5432/tss?sslmode=disable"
+
+listener:
+  addr: :9000
+
+core:
+  addr: tcp://validator:26657
+
+cosmos:
+  addr: validator:9090
+
+session:
+  start_block: 15
+  start_session_id: 1
+
+swagger:
+  addr: :1313
+  enabled: false
+
+chain:
+  chain_id: "rarimo_666-1"
+  coin_name: "urmo"

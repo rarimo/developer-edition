@@ -6,9 +6,9 @@ Here you can find the developer-edition to run the Rarimo cross-chain messaging 
 
 ## How to launch
 
-### 1.  Fill Vault
+### 1.  Filling Vault
 
-Running container for Vault:
+Run container for Vault:
 ```shell
 docker-compose up vault -d
 ```
@@ -25,14 +25,14 @@ Briefly, you have to go through the following steps:
 
 ### 2. Running validator
 
-Running container for Validator node:
+Run container for Validator node:
 ```shell
 docker-compose up validator -d
 ```
 
 Then, stake for your TSS services (also check the TSS service [documentation](https://github.com/rarimo/tss-svc#stake-tokens-to-become-an-active-party)).
 
-### 3.  Key generation
+### 3.  Generating keys
 
 Configure session start in `tss{i}.yaml` files. Run TSS services (`docker-compose up -d`) with
 ```yaml

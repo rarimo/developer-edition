@@ -1,6 +1,8 @@
 # Developer edition for Rarimo decentralized bridge
 
-Here you can found the developer edition to run the Rarimo cross chain protocol for developer reasons.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Here you can find the developer-edition to run the Rarimo cross-chain messaging protocol core for developer reasons.
 
 ## How to launch
 
@@ -28,11 +30,14 @@ Running container for Validator node:
 docker-compose up validator -d
 ```
 
-Stake for TSS service (also check the TSS service [documentation](https://github.com/rarimo/tss-svc#stake-tokens-to-become-an-active-party)).
+Then, stake for your TSS services (also check the TSS service [documentation](https://github.com/rarimo/tss-svc#stake-tokens-to-become-an-active-party)).
 
 ### 3.  Key generation
 
-Configure session start in `tss{i}.yaml` files. Run TSS services (`docker-compose up -d`) with `entrypoint: sh -c "tss-svc migrate up && tss-svc run keygen"`.
+Configure session start in `tss{i}.yaml` files. Run TSS services (`docker-compose up -d`) with
+```yaml
+entrypoint: sh -c "tss-svc migrate up && tss-svc run keygen"
+```
 After finishing of the keygen session change back the entrypoint to `...tss-svc run service`.
 
 ## Keys

@@ -44,9 +44,7 @@ services:
       - MOUNT_PATH=secret
       - SECRET_PATH=tss1
       - DAEMON_ARGS=-w 1024
-    ## Uncomment the line below to run in keygen mode
-    #entrypoint: sh -c "tss-svc migrate up && tss-svc run keygen"
-    entrypoint: sh -c "tss-svc migrate up && tss-svc run service"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE}"
 
   tss-1-db:
     image: postgres:13
@@ -76,9 +74,7 @@ services:
       - MOUNT_PATH=secret
       - SECRET_PATH=tss2
       - DAEMON_ARGS=-w 1024
-    ## Uncomment the line below to run in keygen mode
-    #entrypoint: sh -c "tss-svc migrate up && tss-svc run keygen"
-    entrypoint: sh -c "tss-svc migrate up && tss-svc run service"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE}"
 
   tss-2-db:
     image: postgres:13
@@ -108,9 +104,7 @@ services:
       - MOUNT_PATH=secret
       - SECRET_PATH=tss3
       - DAEMON_ARGS=-w 1024
-    ## Uncomment the line below to run in keygen mode
-    #entrypoint: sh -c "tss-svc migrate up && tss-svc run keygen"
-    entrypoint: sh -c "tss-svc migrate up && tss-svc run service"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE}"
 
   tss-3-db:
     image: postgres:13
@@ -139,7 +133,7 @@ services:
       - VAULT_TOKEN=dev-only-token
       - MOUNT_PATH=secret
       - SECRET_PATH=tss4
-    entrypoint: sh -c "tss-svc migrate up && tss-svc run service"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE}"
 
   tss-4-db:
     image: postgres:13
@@ -160,10 +154,116 @@ services:
 
   vault:
     image: vault:1.13.3
+    volumes:
+      - ./config/vault/config:/vault/config
+      - ./config/vault/policies:/vault/policies
+      - ./config/vault/scripts:/vault/scripts
+      - ./config/vault/plugins:/vault/plugins
+      - ./config/vault/data:/vault/data
+      - ./config/vault/file:/vault/file:rw
     environment:
-      VAULT_DEV_ROOT_TOKEN_ID: dev-only-token
+      - VAULT_DEV_ROOT_TOKEN_ID=dev-only-token
+      - VAULT_ADDR=http://0.0.0.0:8200
+      - VAULT_API_ADDR=http://0.0.0.0:8200
+      - VAULT_ADDRESS=http://0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
     ports:
       - 8200:8200
+    command: ./vault/scripts/init.sh
+
+  #
+  #
+  ################ ISSUER ################
+  #
+  #
+
+  issuer-db:
+    image: postgres:14-alpine
+    hostname: postgres
+    environment:
+      - PGPORT=5432
+      - PGUSER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./scripts/sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  issuer-redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-p", "6379", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  issuer-api:
+    image: ghcr.io/rarimo/issuernode:v3.0.0-rc.2
+    depends_on:
+      - issuer-db
+      - issuer-redis
+      - vault
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./config/.env-api
+      - ./config/.env-issuer
+    command: sh -c "sleep 30s && ./migrate && ./platform"
+
+  issuer-api-ui:
+    image: ghcr.io/rarimo/issuernode:v3.0.0-rc.2
+    depends_on:
+      - issuer-db
+      - issuer-redis
+      - vault
+    ports:
+      - "3002:3002"
+    env_file:
+      - ./config/.env-api
+      - ./config/.env-issuer
+    command: sh -c "sleep 4s && ./migrate && ./platform_ui"
+
+  issuer-notifications:
+    image: ghcr.io/rarimo/issuernode:v3.0.0-rc.2
+    depends_on:
+      - issuer-db
+      - issuer-redis
+      - vault
+    env_file:
+      - ./config/.env-api
+      - ./config/.env-issuer
+    command: sh -c "sleep 4s && ./notifications"
+
+  issuer-pending-publisher:
+    image: ghcr.io/rarimo/issuernode:v3.0.0-rc.2
+    depends_on:
+      - issuer-db
+      - issuer-redis
+      - vault
+    env_file:
+      - ./config/.env-api
+      - ./config/.env-issuer
+    command: sh -c "sleep 4s && ./pending_publisher"
+
+  issuer-initializer:
+    image: ghcr.io/rarimo/issuernode:v3.0.0-rc.2
+    depends_on:
+      - issuer-db
+      - issuer-redis
+      - vault
+    env_file:
+      - ./config/.env-api
+      - ./config/.env-issuer
+    command: sh -c "sleep 4s && ./migrate && mkdir did && mkdir did/data && ./issuer_initializer"
 
 volumes:
   tss-1-data:

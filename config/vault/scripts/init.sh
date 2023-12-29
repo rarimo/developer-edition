@@ -74,9 +74,6 @@ if [[ "$result" == "No value found at auth/userpass/users/issuernode" ]]; then
 else
     echo "issuernode user found, skipping creation..."
 fi
-echo "Vault token: $vault_token"
 
-# FIXME. This is forbidden in Alpine sh. Find another solution to bring server to foreground in order to make GUI accessible.
-set -m
-echo "Running vault server in foreground"
-fg
+echo "Vault token: $vault_token"
+tail -f /dev/null

@@ -1,3 +1,4 @@
 .idea
 config/validator/data
 config/.env-*
+config/vault

@@ -44,7 +44,7 @@ services:
       - MOUNT_PATH=secret
       - SECRET_PATH=tss1
       - DAEMON_ARGS=-w 1024
-    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE}"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE:-service}"
 
   tss-1-db:
     image: postgres:13
@@ -74,7 +74,7 @@ services:
       - MOUNT_PATH=secret
       - SECRET_PATH=tss2
       - DAEMON_ARGS=-w 1024
-    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE}"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE:-service}"
 
   tss-2-db:
     image: postgres:13
@@ -104,7 +104,7 @@ services:
       - MOUNT_PATH=secret
       - SECRET_PATH=tss3
       - DAEMON_ARGS=-w 1024
-    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE}"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE:-service}"
 
   tss-3-db:
     image: postgres:13
@@ -133,7 +133,7 @@ services:
       - VAULT_TOKEN=dev-only-token
       - MOUNT_PATH=secret
       - SECRET_PATH=tss4
-    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE}"
+    entrypoint: sh -c "tss-svc migrate up && tss-svc run ${TSS_MODE:-service}"
 
   tss-4-db:
     image: postgres:13
@@ -154,23 +154,10 @@ services:
 
   vault:
     image: vault:1.13.3
-    volumes:
-      - ./config/vault/config:/vault/config
-      - ./config/vault/policies:/vault/policies
-      - ./config/vault/scripts:/vault/scripts
-      - ./config/vault/plugins:/vault/plugins
-      - ./config/vault/data:/vault/data
-      - ./config/vault/file:/vault/file:rw
     environment:
-      - VAULT_DEV_ROOT_TOKEN_ID=dev-only-token
-      - VAULT_ADDR=http://0.0.0.0:8200
-      - VAULT_API_ADDR=http://0.0.0.0:8200
-      - VAULT_ADDRESS=http://0.0.0.0:8200
-    cap_add:
-      - IPC_LOCK
+      VAULT_DEV_ROOT_TOKEN_ID: dev-only-token
     ports:
       - 8200:8200
-    command: ./vault/scripts/init.sh
 
   #
   #
@@ -186,10 +173,8 @@ services:
       - PGUSER=postgres
       - POSTGRES_HOST_AUTH_METHOD=trust
       - POSTGRES_USER=postgres
-    ports:
-      - "5433:5432"
     volumes:
-      - ./scripts/sql:/docker-entrypoint-initdb.d:ro
+      - ./config/issuer-db-migrate:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s
@@ -198,13 +183,28 @@ services:
 
   issuer-redis:
     image: redis:6-alpine
-    ports:
-      - "6379:6379"
     healthcheck:
       test: [ "CMD", "redis-cli", "-p", "6379", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  issuer-vault:
+    image: vault:1.13.2
+    volumes:
+      - ./config/vault/config:/vault/config
+      - ./config/vault/policies:/vault/policies
+      - ./config/vault/scripts:/vault/scripts
+      - ./config/vault/plugins:/vault/plugins
+      - ./config/vault/data:/vault/data
+      - ./config/vault/file:/vault/file:rw
+    environment:
+      - VAULT_ADDR=http://0.0.0.0:8200
+      - VAULT_API_ADDR=http://0.0.0.0:8200
+      - VAULT_ADDRESS=http://0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
+    command: ./vault/scripts/init.sh
 
   issuer-api:
     image: ghcr.io/rarimo/issuernode:v3.0.0-rc.2

@@ -33,6 +33,10 @@ endif
 # usage: make key=xxx issuer
 issuer: issuer-clean-vault issuer-storage issuer-add-priv-key issuer-add-vault-token issuer-generate-did issuer-services
 
+# usage: make keygen=true key=xxx all-remaining (keygen is optional)
+all-remaining: tss-all issuer
+	docker compose up -d rarime-orgs
+
 clean: issuer-clean-vault
 	docker compose down -v --remove-orphans
 

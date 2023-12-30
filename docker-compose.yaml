@@ -148,7 +148,7 @@ services:
 
   #
   #
-  ################ VAULT ################
+  ################ Infrastructure ################
   #
   #
 
@@ -158,6 +158,31 @@ services:
       VAULT_DEV_ROOT_TOKEN_ID: dev-only-token
     ports:
       - 8200:8200
+    
+  rarime-orgs:
+    image: ghcr.io/rarimo/rarime-orgs-svc:v0.1.0
+    restart: on-failure
+    depends_on:
+      - rarime-orgs-db
+      - validator
+    ports:
+      - "9010:80"
+    volumes:
+      - ./config/rarime-orgs.yaml:/config.yaml
+    environment:
+      - KV_VIPER_FILE=/config.yaml
+    entrypoint: sh -c "rarime-orgs-svc migrate up && rarime-orgs-svc run api"
+
+  rarime-orgs-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=orgs
+      - POSTGRES_PASSWORD=orgs
+      - POSTGRES_DB=orgs
+      - PGDATA=/pgdata
+    volumes:
+      - orgs-data:/pgdata
 
   #
   #
@@ -270,3 +295,4 @@ volumes:
   tss-2-data:
   tss-3-data:
   tss-4-data:
+  orgs-data:

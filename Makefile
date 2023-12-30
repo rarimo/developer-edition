@@ -30,8 +30,8 @@ else
 	TSS_MODE=service docker compose up -d tss-1 tss-2 tss-3 tss-4
 endif
 
-# usage: make private_key=xxx issuer
-issuer: issuer-clean-vault issuer-storage add-private-key add-vault-token generate-issuer-did issuer-services
+# usage: make key=xxx issuer
+issuer: issuer-clean-vault issuer-storage issuer-add-priv-key issuer-add-vault-token issuer-generate-did issuer-services
 
 clean: issuer-clean-vault
 	docker compose down -v --remove-orphans
@@ -50,18 +50,18 @@ issuer-storage:
 issuer-services:
 	docker compose up -d issuer-api issuer-api-ui issuer-notifications issuer-pending-publisher
 
-# usage: make private_key=xxx add-private-key
-add-private-key:
+# usage: make key=xxx issuer-add-priv-key
+issuer-add-priv-key:
 	docker compose exec issuer-vault \
-	vault write iden3/import/pbkey key_type=ethereum private_key=$(private_key)
+	vault write iden3/import/pbkey key_type=ethereum private_key=$(key)
 
-add-vault-token:
+issuer-add-vault-token:
 	$(eval TOKEN = $(shell docker compose logs issuer-vault 2>&1 | grep " .hvs" | awk '{print $$4}' | tail -1 ))
 	sed '/ISSUER_KEY_STORE_TOKEN/d' config/.env-issuer > config/.env-issuer.tmp
 	@echo ISSUER_KEY_STORE_TOKEN=$(TOKEN) >> config/.env-issuer.tmp
 	mv config/.env-issuer.tmp config/.env-issuer
 
-generate-issuer-did: issuer-initializer
+issuer-generate-did: issuer-initializer
 	$(eval DID = $(shell docker compose logs --tail 1 issuer-initializer | awk '{print $$3}'))
 	@echo "DID: $(DID)"
 	sed '/ISSUER_API_UI_ISSUER_DID/d' config/.env-api > config/.env-api.tmp
@@ -69,23 +69,25 @@ generate-issuer-did: issuer-initializer
 	mv config/.env-api.tmp config/.env-api
 	docker compose rm -sf issuer-initializer
 
+# this is a separate target due to Makefile variables processing:
+# if we do it inside issuer-generate-did, DID would be empty
 issuer-initializer:
 	docker compose up -d issuer-initializer
 	sleep 5
 
-print-vault-token:
+issuer-print-vault-token:
 	$(eval TOKEN = $(shell docker compose logs issuer-vault 2>&1 | grep " .hvs" | awk '{print $$4}' | tail -1 ))
 	@echo $(TOKEN)
 
-print-did:
+issuer-print-did:
 	docker compose exec issuer-vault \
 	vault kv get -mount=kv did
 
-delete-did:
+issuer-delete-did:
 	docker compose exec issuer-vault \
 	vault kv delete kv/did
 
 # usage: make did=xxx add-did
-add-did:
+issuer-add-did:
 	docker compose exec issuer-vault \
 	vault kv put kv/did did=$(did)

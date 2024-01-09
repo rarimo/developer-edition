@@ -18,16 +18,16 @@ else
 	TSS_MODE=service docker compose up -d tss-$(n)
 endif
 
-# usage: make keygen=true tss-single (keygen is optional)
+# usage: make keygen=true tss-all (keygen is optional)
 tss-all:
 ifeq ($(keygen), true)
-	TSS_MODE=keygen docker compose up -d tss-1 tss-2 tss-3 tss-4
+	TSS_MODE=keygen docker compose up -d tss-{1..4}
 	sleep 5
 	docker compose logs tss-1
-	docker compose down tss-1 tss-2 tss-3 tss-4
-	TSS_MODE=service docker compose up -d tss-1 tss-2 tss-3 tss-4
+	docker compose down tss-{1..4}
+	TSS_MODE=service docker compose up -d tss-{1..4}
 else
-	TSS_MODE=service docker compose up -d tss-1 tss-2 tss-3 tss-4
+	TSS_MODE=service docker compose up -d tss-{1..4}
 endif
 
 # usage: make key=xxx issuer

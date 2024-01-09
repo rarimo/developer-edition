@@ -158,6 +158,25 @@ services:
       VAULT_DEV_ROOT_TOKEN_ID: dev-only-token
     ports:
       - 8200:8200
+  
+  vault_init:
+    image: curlimages/curl:8.5.0
+    depends_on:
+      - vault
+    environment:
+      VAULT_TOKEN: dev-only-token
+    volumes:
+      - ./scripts/vault-init.sh:/vault-init.sh:ro
+    entrypoint: /vault-init.sh
+  
+  tss_stake:
+    image: ghcr.io/rarimo/rarimo-core:v1.0.6
+    depends_on:
+      - validator
+    volumes:
+      - ./config/validator/keyring-test:/validator/keyring-test:ro
+      - ./scripts/tss-stake.sh:/tss-stake.sh:ro
+    entrypoint: /tss-stake.sh
     
   rarime-orgs:
     image: ghcr.io/rarimo/rarime-orgs-svc:v0.1.0

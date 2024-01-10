@@ -202,6 +202,30 @@ services:
       - PGDATA=/pgdata
     volumes:
       - orgs-data:/pgdata
+  
+  rarime-link:
+    image: ghcr.io/rarimo/rarime-link-svc:v0.2.0
+    restart: on-failure
+    depends_on:
+      - rarime-link-db
+    ports:
+      - "9020:80"
+    volumes:
+      - ./config/rarime-link.yaml:/config.yaml
+    environment:
+      - KV_VIPER_FILE=/config.yaml
+    entrypoint: sh -c "rarime-link-svc migrate up && rarime-link-svc run api"
+
+  rarime-link-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=link
+      - POSTGRES_PASSWORD=link
+      - POSTGRES_DB=link
+      - PGDATA=/pgdata
+    volumes:
+      - link-data:/pgdata
 
   #
   #
@@ -323,3 +347,4 @@ volumes:
   tss-3-data:
   tss-4-data:
   orgs-data:
+  link-data:

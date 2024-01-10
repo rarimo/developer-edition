@@ -1,0 +1,18 @@
+log:
+  disable_sentry: true
+  level: debug
+
+listener:
+  addr: :80
+
+link:
+  max_expiration_time: 10h
+
+running_periods:
+  proofs_cleaner:
+    normal_period: 50m
+    min_abnormal_period: 50m
+    max_abnormal_period: 60m
+
+db:
+  url: postgres://link:link@rarime-link-db/link?sslmode=disable

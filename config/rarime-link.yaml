@@ -15,4 +15,4 @@ running_periods:
     max_abnormal_period: 60m
 
 db:
-  url: postgres://link:link@rarime-link-db/link?sslmode=disable
+  url: postgres://link:link@rarime-link-db:5432/link?sslmode=disable

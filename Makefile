@@ -39,6 +39,8 @@ issuer: issuer-clean-vault issuer-storage issuer-add-priv-key issuer-add-vault-t
 
 clean: issuer-clean-vault
 	docker compose down -v --remove-orphans
+	rm -rf config/validator/data/*
+	@echo '{"height":"0","round":0,"step":0}' > config/validator/data/priv_validator_state.json
 
 issuer-clean-vault:
 	rm -R config/vault/data/init.out || true

@@ -5,6 +5,9 @@ vault:
 
 validator:
 	docker compose up -d validator
+	sleep 3
+	docker compose up -d issuer-state-deployer
+	docker compose logs -f issuer-state-deployer
 
 # usage: make n=1 keygen=true tss-single (keygen is optional, running without it by default)
 tss-single:

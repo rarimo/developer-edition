@@ -14,11 +14,11 @@ services:
       - ./config/validator/config:/usr/local/bin/genesis/config
       - ./config/validator/data:/usr/local/bin/genesis/data
     ports:
-      - "26657:26657"
-      - "1317:1317"
-      - "9090:9090"
-      - "8545:8545"
-      - "8546:8546"
+      - "26657:26657" # Rarimo RPC
+      - "1317:1317" # Rarimo REST
+      - "9090:9090" # Cosmos gRPC
+      - "8545:8545" # EVM HTTP RPC
+      - "8546:8546" # EVM WS RPC
 
   #
   #
@@ -159,7 +159,7 @@ services:
     ports:
       - 8200:8200
   
-  vault_init:
+  vault-init:
     image: curlimages/curl:8.5.0
     depends_on:
       - vault
@@ -169,7 +169,7 @@ services:
       - ./scripts/vault-init.sh:/vault-init.sh:ro
     entrypoint: /vault-init.sh
   
-  tss_stake:
+  tss-stake:
     image: ghcr.io/rarimo/rarimo-core:v1.0.6
     depends_on:
       - validator
@@ -208,17 +208,25 @@ services:
   ################ ISSUER ################
   #
   #
+  
+  issuer-state-deployer:
+    # image: ghcr.io/rarimo/identity-contracts:d0f6ec7804031fa41b7c69bbacfd5739fcf603d2
+    image: rarimo/state_contract_local
+    depends_on:
+      - validator
+    env_file:
+      - ./config/.env-contract
+    entrypoint: npm run deploy-dev
 
   issuer-db:
     image: postgres:14-alpine
-    hostname: postgres
     environment:
       - PGPORT=5432
       - PGUSER=postgres
       - POSTGRES_HOST_AUTH_METHOD=trust
       - POSTGRES_USER=postgres
     volumes:
-      - ./config/issuer-db-migrate:/docker-entrypoint-initdb.d:ro
+      - ./config/issuer-db:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s

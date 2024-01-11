@@ -75,5 +75,6 @@ else
     echo "issuernode user found, skipping creation..."
 fi
 
+touch /vault/plugins/.initialized
 echo "Vault token: $vault_token"
 tail -f /dev/null

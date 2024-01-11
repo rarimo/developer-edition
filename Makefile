@@ -54,8 +54,11 @@ issuer-clean-vault:
 	rm -R config/vault/policies || true
 
 issuer-storage:
+	$(eval init=./config/vault/plugins/.initialized)
 	docker compose up -d issuer-db issuer-redis issuer-vault
-	sleep 12
+	while [ ! -f $(init) ]; do sleep 1; done
+	@echo "Vault initialized, proceeding"
+	@rm $(init)
 
 issuer-services:
 	docker compose up -d issuer-api issuer-api-ui issuer-notifications issuer-pending-publisher

@@ -14,7 +14,9 @@ Here you can find the developer-edition to run the Rarimo cross-chain messaging 
 
 It is recommended to drop all other Docker services in order to prevent conflicts with ports.
 
-Deploy the full system from scratch with out-of-box configuration:
+## Deploy from scratch
+
+Deploy the full system with out-of-box configuration. Do not run this if you have already deployed system and didn't fully clean it up, or the issues with some services will appear. See below.
 ```shell
 make all
 ```
@@ -23,7 +25,7 @@ This command does the following:
 1. Check *Issuer's* env files; if they are absent, copy `env-issuer.sample`, `env-api.sample` into `.env-issuer`, `.env-api` accordingly in [config](config) directory
 2. Run Vault and Validator
 3. Fill Vault with 4 TSS pre-generated secrets
-4. Stake for 4 TSS services, paying from Validator's account
+4. Stake for 3 TSS services, paying from Validator's account
 5. Run TSS services in *keygen* mode, then restart in normal
 6. Clean up *Issuer Vault* local files (this is a separate instance of Vault)
 7. Run Issuer services, initialize Issuer Vault
@@ -33,7 +35,8 @@ This command does the following:
 
 Explore [docker-compose.yaml](docker-compose.yaml) to view the exposed ports of each service you need.
 
-Drop the entire system. **Please understand what this involves before the execution:**
+### Full cleanup
+**Please understand what this involves before the execution:**
 - Stopping services, deleting containers
 - Pruning volumes: databases of TSS, orgs, links services
 - Deleting local *Rarimo ledger state*
@@ -42,9 +45,15 @@ Drop the entire system. **Please understand what this involves before the execut
 make clean
 ```
 
+Convenient restarting is not currently implemented due to numerous problems with re-initialization.
+
 ### Optional configuration
 
 To enable domain verification and e-mail notifications for orgs service, check out `config/rarime-orgs.yaml`.
+
+Issuer private key can be set in `Makefile`. If you change it and keep contract address and RPC pointing to local EvmOS, be sure to add new accounts into `genesis.json` and run from scratch. Another option is to transfer funds from the original account to yours.
+
+TSS secrets can be configured manually, as well as staking, see [the guide](https://github.com/rarimo/tss-svc?tab=readme-ov-file#launch). FYI this is performed in `scripts/vault-init.sh` and `scripts/tss-stake.sh`, so you can change them for convenience.
 
 ## Troubleshooting
 

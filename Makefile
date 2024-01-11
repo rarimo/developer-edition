@@ -1,14 +1,18 @@
-include config/.env-api
-include config/.env-contract
+ISSUER_PRIVATE_KEY=0xafd025fa9020e189496bfd2a9d47316490c2940a11e4bfd4086e3dd98ca36dd5
 
-all:
+all: prepare-env
 	docker compose up -d vault vault-init validator
+	sleep 5
 	docker compose up -d tss-stake
 	@keygen=true $(MAKE) tss-all
-	key=$(subst 0x,,$(PRIVATE_KEY)) $(MAKE) issuer
+	key=$(subst 0x,,$(ISSUER_PRIVATE_KEY)) $(MAKE) issuer
 	docker compose up -d rarime-orgs-db rarime-link-db
 	sleep 3
 	docker compose up -d rarime-orgs rarime-link
+
+prepare-env:
+	@ls config/.env-api > /dev/null 2>&1 || cp config/env-api.sample config/.env-api
+	@ls config/.env-issuer > /dev/null 2>&1 || cp config/env-issuer.sample config/.env-issuer
 
 # usage: make keygen=true tss-all (keygen is optional, running without it by default)
 tss-all:
@@ -51,7 +55,7 @@ issuer-clean-vault:
 
 issuer-storage:
 	docker compose up -d issuer-db issuer-redis issuer-vault
-	sleep 10
+	sleep 12
 
 issuer-services:
 	docker compose up -d issuer-api issuer-api-ui issuer-notifications issuer-pending-publisher

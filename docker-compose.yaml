@@ -233,15 +233,6 @@ services:
   #
   #
   
-  issuer-state-deployer:
-    # image: ghcr.io/rarimo/identity-contracts:d0f6ec7804031fa41b7c69bbacfd5739fcf603d2
-    image: rarimo/state_contract_local
-    depends_on:
-      - validator
-    env_file:
-      - ./config/.env-contract
-    entrypoint: npm run deploy-dev
-
   issuer-db:
     image: postgres:14-alpine
     environment:

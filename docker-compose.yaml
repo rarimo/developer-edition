@@ -204,7 +204,7 @@ services:
       - orgs-data:/pgdata
   
   rarime-link:
-    image: ghcr.io/rarimo/rarime-link-svc:v0.2.1
+    image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc1
     restart: on-failure
     depends_on:
       - rarime-link-db
@@ -226,6 +226,17 @@ services:
       - PGDATA=/pgdata
     volumes:
       - link-data:/pgdata
+
+  rarime-auth:
+    image: ghcr.io/rarimo/rarime-auth-svc:4abde6758908d8c9021540972f7d8a16e21916d7
+    restart: on-failure
+    ports:
+      - "9030:80"
+    volumes:
+      - ./config/rarime-auth.yaml:/config.yaml
+    environment:
+      - KV_VIPER_FILE=/config.yaml
+    entrypoint: sh -c "rarime-auth-svc run service"
 
   #
   #

@@ -204,7 +204,7 @@ services:
       - orgs-data:/pgdata
   
   rarime-link:
-    image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc1
+    image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc2
     restart: on-failure
     depends_on:
       - rarime-link-db

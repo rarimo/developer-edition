@@ -179,10 +179,11 @@ services:
     entrypoint: /tss-stake.sh
     
   rarime-orgs:
-    image: ghcr.io/rarimo/rarime-orgs-svc:v0.3.0
+    image: ghcr.io/rarimo/rarime-orgs-svc:v0.3.0 # TODO: replace with the one containing S3
     restart: on-failure
     depends_on:
       - rarime-orgs-db
+      - storage
       - validator
     ports:
       - "9010:80"
@@ -190,6 +191,9 @@ services:
       - ./config/rarime-orgs.yaml:/config.yaml
     environment:
       - KV_VIPER_FILE=/config.yaml
+      - AWS_ACCESS_KEY=miniominio
+      - AWS_SECRET_KEY=sekritsekrit
+      - AWS_REGION=us-east-1
     entrypoint: sh -c "rarime-orgs-svc migrate up && rarime-orgs-svc run api"
 
   rarime-orgs-db:
@@ -202,6 +206,20 @@ services:
       - PGDATA=/pgdata
     volumes:
       - orgs-data:/pgdata
+  
+  storage:
+    image: minio/minio:RELEASE.2024-01-13T07-53-03Z.fips
+    restart: unless-stopped
+    entrypoint: sh -c "mkdir -p /data/tfstate && minio server /data --console-address :9011"
+    environment:
+      - MINIO_ACCESS_KEY=miniominio
+      - MINIO_SECRET_KEY=sekritsekrit
+      - MINIO_BROWSER=on
+    volumes:
+      - storage-data:/data
+    ports:
+      - "9000:9000" # Minio API
+      - "9011:9011" # Minio Console, but you should still open localhost:9000 - it will redirect to :9011
   
   rarime-link:
     image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc2
@@ -349,4 +367,5 @@ volumes:
   tss-3-data:
   tss-4-data:
   orgs-data:
+  storage-data:
   link-data:

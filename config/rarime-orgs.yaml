@@ -19,3 +19,20 @@ db:
 notificator:
   app_base_url: https://app.rarime.com
   api_key: "" # https://mailchimp.com/developer/transactional/guides/quick-start/#generate-your-api-key
+
+aws:
+  # access_key, secret_key, region can be here, but it's recommended to pass as env vars
+  disabled: false
+  credentials: "static"
+  endpoint: storage:9000
+  disable_ssl: true
+
+s3:
+  bucket: "orgs"
+  ensure_bucket: true
+  client_url: http://storage:9000/orgs
+  media_types:
+    logo:
+      - image/jpeg
+      - image/png
+      - image/gif

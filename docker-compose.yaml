@@ -204,7 +204,7 @@ services:
       - orgs-data:/pgdata
   
   rarime-link:
-    image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc2
+    image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc3
     restart: on-failure
     depends_on:
       - rarime-link-db
@@ -228,7 +228,7 @@ services:
       - link-data:/pgdata
 
   rarime-auth:
-    image: ghcr.io/rarimo/rarime-auth-svc:4abde6758908d8c9021540972f7d8a16e21916d7
+    image: ghcr.io/rarimo/rarime-auth-svc:v0.0.1-rc3
     restart: on-failure
     ports:
       - "9030:80"

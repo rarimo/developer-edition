@@ -179,11 +179,12 @@ services:
     entrypoint: /tss-stake.sh
     
   rarime-orgs:
-    image: ghcr.io/rarimo/rarime-orgs-svc:v0.3.0
+    image: ghcr.io/rarimo/rarime-orgs-svc:v0.6.1
     restart: on-failure
     depends_on:
       - rarime-orgs-db
       - validator
+      - storage
     ports:
       - "9010:80"
     volumes:
@@ -228,7 +229,7 @@ services:
       - link-data:/pgdata
 
   rarime-auth:
-    image: ghcr.io/rarimo/rarime-auth-svc:v0.0.1-rc3
+    image: ghcr.io/rarimo/rarime-auth-svc:v0.0.1-rc6
     restart: on-failure
     ports:
       - "9030:80"
@@ -343,6 +344,20 @@ services:
       - ./config/.env-issuer
     command: sh -c "sleep 4s && ./migrate && mkdir did && mkdir did/data && ./issuer_initializer"
 
+  storage:
+    image: minio/minio:RELEASE.2024-01-13T07-53-03Z.fips
+    restart: unless-stopped
+    entrypoint: sh -c "mkdir -p /data/tfstate && minio server /data --console-address :9011"
+    environment:
+      - MINIO_ACCESS_KEY=miniominio
+      - MINIO_SECRET_KEY=sekritsekrit
+      - MINIO_BROWSER=on
+    volumes:
+      - storage-data:/data
+    ports:
+      - "9000:9000" # Minio API
+      - "9011:9011" # Minio Console, but you should still open localhost:9000 - it will redirect to :9011
+
 volumes:
   tss-1-data:
   tss-2-data:
@@ -350,3 +365,4 @@ volumes:
   tss-4-data:
   orgs-data:
   link-data:
+  storage-data:

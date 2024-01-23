@@ -238,6 +238,30 @@ services:
     environment:
       - KV_VIPER_FILE=/config.yaml
     entrypoint: sh -c "rarime-auth-svc run service"
+    
+  rarime-points:
+    image: ghcr.io/rarimo/rarime-points-svc:12024b650eb61934483647b6efb75461f974f1ec
+    restart: on-failure
+    depends_on:
+      - rarime-points-db
+    ports:
+      - "9040:80"
+    volumes:
+      - ./config/rarime-points.yaml:/config.yaml
+    environment:
+      - KV_VIPER_FILE=/config.yaml
+    entrypoint: sh -c "rarime-points-svc migrate up && rarime-points-svc run service"
+
+  rarime-points-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=points
+      - POSTGRES_PASSWORD=points
+      - POSTGRES_DB=points
+      - PGDATA=/pgdata
+    volumes:
+      - points-data:/pgdata
 
   #
   #
@@ -366,3 +390,4 @@ volumes:
   orgs-data:
   link-data:
   storage-data:
+  points-data:

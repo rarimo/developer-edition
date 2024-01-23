@@ -1,0 +1,30 @@
+log:
+  level: debug
+  disable_sentry: true
+
+db:
+  url: postgres://points:points@rarime-points-db:5432/points?sslmode=disable
+
+listener:
+  addr: :80
+
+cop:
+  disabled: true
+  endpoint: "http://..."
+  upstream: "http://..."
+  service_name: points-svc
+  service_port: 80
+
+event_types:
+  types:
+    - name: get_poh
+      title: Get PoH credential
+      reward: 50
+      description: Lorem ipsum dolor sit amet
+      frequency: one-time
+      expires_at: 2024-03-01T00:00:00Z
+    - name: daily_login
+      title: Daily login
+      reward: 5
+      description: Lorem ipsum dolor sit amet
+      frequency: daily

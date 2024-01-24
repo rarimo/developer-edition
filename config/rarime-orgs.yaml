@@ -39,4 +39,4 @@ s3:
       - image/gif
 
 auth:
-  addr: auth-svc:80
+  addr: http://rarime-auth

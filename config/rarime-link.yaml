@@ -18,4 +18,4 @@ db:
   url: postgres://link:link@rarime-link-db:5432/link?sslmode=disable
 
 auth:
-  addr: rarime-auth:80
+  addr: http://rarime-auth

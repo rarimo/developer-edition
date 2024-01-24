@@ -182,6 +182,7 @@ services:
     image: ghcr.io/rarimo/rarime-orgs-svc:v0.7.6
     restart: on-failure
     depends_on:
+      - rarime-auth
       - rarime-orgs-db
       - validator
       - storage
@@ -208,6 +209,7 @@ services:
     image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc7
     restart: on-failure
     depends_on:
+      - rarime-auth
       - rarime-link-db
     ports:
       - "9020:80"
@@ -240,9 +242,10 @@ services:
     entrypoint: sh -c "rarime-auth-svc run service"
     
   rarime-points:
-    image: ghcr.io/rarimo/rarime-points-svc:12024b650eb61934483647b6efb75461f974f1ec
+    image: ghcr.io/rarimo/rarime-points-svc:d850ecc8f42670c35f0abc2d7f066d57c741e3bd
     restart: on-failure
     depends_on:
+      - rarime-auth
       - rarime-points-db
     ports:
       - "9040:80"

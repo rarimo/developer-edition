@@ -28,3 +28,7 @@ event_types:
       reward: 5
       description: Lorem ipsum dolor sit amet
       frequency: daily
+
+auth:
+  addr: http://rarime-auth
+

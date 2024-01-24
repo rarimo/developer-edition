@@ -179,7 +179,7 @@ services:
     entrypoint: /tss-stake.sh
     
   rarime-orgs:
-    image: ghcr.io/rarimo/rarime-orgs-svc:v0.6.4
+    image: ghcr.io/rarimo/rarime-orgs-svc:v0.7.2
     restart: on-failure
     depends_on:
       - rarime-orgs-db

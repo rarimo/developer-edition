@@ -242,7 +242,7 @@ services:
     entrypoint: sh -c "rarime-auth-svc run service"
     
   rarime-points:
-    image: ghcr.io/rarimo/rarime-points-svc:d850ecc8f42670c35f0abc2d7f066d57c741e3bd
+    image: ghcr.io/rarimo/rarime-points-svc:5f38bcd76c6858d3303d477676705b3084f2fc4c
     restart: on-failure
     depends_on:
       - rarime-auth

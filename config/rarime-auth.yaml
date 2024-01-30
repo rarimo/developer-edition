@@ -13,3 +13,7 @@ jwt:
 verifier:
   schema: 12345
   enabled: false
+
+cookies:
+  domain: "localhost"
+  secure: false

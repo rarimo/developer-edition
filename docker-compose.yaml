@@ -179,7 +179,7 @@ services:
     entrypoint: /tss-stake.sh
     
   rarime-orgs:
-    image: ghcr.io/rarimo/rarime-orgs-svc:v0.7.3
+    image: ghcr.io/rarimo/rarime-orgs-svc:v0.7.6
     restart: on-failure
     depends_on:
       - rarime-orgs-db
@@ -205,7 +205,7 @@ services:
       - orgs-data:/pgdata
   
   rarime-link:
-    image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc6
+    image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc7
     restart: on-failure
     depends_on:
       - rarime-link-db
@@ -229,7 +229,7 @@ services:
       - link-data:/pgdata
 
   rarime-auth:
-    image: ghcr.io/rarimo/rarime-auth-svc:v0.0.1-rc8
+    image: ghcr.io/rarimo/rarime-auth-svc:v0.0.1-rc10
     restart: on-failure
     ports:
       - "9030:80"

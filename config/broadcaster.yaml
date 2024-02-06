@@ -1,0 +1,17 @@
+log:
+  disable_sentry: true
+  level: debug
+
+listener:
+  addr: :80
+
+db:
+  url: "postgres://broadcaster:broadcaster@broadcaster-db/broadcaster?sslmode=disable"
+
+key:
+  sender_prv_hex: "0xafd025fa9020e189496bfd2a9d47316490c2940a11e4bfd4086e3dd98ca36dd5"
+  chain_id: "rarimo_666-1"
+  coin_name: "urmo"
+
+cosmos:
+  addr: "validator:9090"

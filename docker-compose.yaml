@@ -178,6 +178,7 @@ services:
       - ./scripts/tss-stake.sh:/tss-stake.sh:ro
     entrypoint: /tss-stake.sh
     
+  # orgs might be removed in the future, so they are not used in Makefile now
   rarime-orgs:
     image: ghcr.io/rarimo/rarime-orgs-svc:v0.7.6
     restart: on-failure
@@ -206,7 +207,7 @@ services:
       - orgs-data:/pgdata
   
   rarime-link:
-    image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc7
+    image: ghcr.io/rarimo/rarime-link-svc:v0.3.2
     restart: on-failure
     depends_on:
       - rarime-auth
@@ -240,13 +241,20 @@ services:
     environment:
       - KV_VIPER_FILE=/config.yaml
     entrypoint: sh -c "rarime-auth-svc run service"
+
+  #
+  #
+  ################ POINTS ################
+  #
+  #
     
   rarime-points:
-    image: ghcr.io/rarimo/rarime-points-svc:5f38bcd76c6858d3303d477676705b3084f2fc4c
+    image: ghcr.io/rarimo/rarime-points-svc:4da13d821b042654fb714d75c9828b9c414b17b4
     restart: on-failure
     depends_on:
-      - rarime-auth
       - rarime-points-db
+      - rarime-auth
+      - broadcaster
     ports:
       - "9040:80"
     volumes:
@@ -265,6 +273,30 @@ services:
       - PGDATA=/pgdata
     volumes:
       - points-data:/pgdata
+
+  broadcaster:
+    image: ghcr.io/rarimo/broadcaster-svc:2973108312b6001e965004cfd2b29ad5d2dd11dd
+    restart: unless-stopped
+    depends_on:
+      - broadcaster-db
+      - validator
+    volumes:
+      - ./config/broadcaster.yaml:/config.yaml
+    environment:
+      - KV_VIPER_FILE=/config.yaml
+    entrypoint: sh -c "broadcaster-svc migrate up && broadcaster-svc run all"
+
+  broadcaster-db:
+    image: postgres:13-bullseye
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=broadcaster
+      - POSTGRES_PASSWORD=broadcaster
+      - POSTGRES_DB=broadcaster
+      - PGDATA=/pgdata
+    volumes:
+      - broadcaster-data:/pgdata
+
 
   #
   #
@@ -394,3 +426,4 @@ volumes:
   link-data:
   storage-data:
   points-data:
+  broadcaster-data:

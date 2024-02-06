@@ -5,10 +5,13 @@ all: prepare-env
 	sleep 5
 	docker compose up -d tss-stake
 	@keygen=true $(MAKE) tss-all
-	key=$(subst 0x,,$(ISSUER_PRIVATE_KEY)) $(MAKE) issuer
-	docker compose up -d rarime-{orgs,link,points}-db rarime-auth
+	docker compose up -d broadcaster-db
 	sleep 3
-	docker compose up -d rarime-{orgs,link,points}
+	docker compose up -d broadcaster
+	key=$(subst 0x,,$(ISSUER_PRIVATE_KEY)) $(MAKE) issuer
+	docker compose up -d rarime-{link,points}-db rarime-auth
+	sleep 3
+	docker compose up -d rarime-{link,points}
 
 prepare-env:
 	@ls config/.env-api > /dev/null 2>&1 || cp config/env-api.sample config/.env-api

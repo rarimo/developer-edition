@@ -249,7 +249,7 @@ services:
   #
     
   rarime-points:
-    image: ghcr.io/rarimo/rarime-points-svc:4da13d821b042654fb714d75c9828b9c414b17b4
+    image: ghcr.io/rarimo/rarime-points-svc:0c0deea9399a449529c1b2dfd702595ab0b67a1a
     restart: on-failure
     depends_on:
       - rarime-points-db

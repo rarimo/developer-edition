@@ -8,31 +8,52 @@ db:
 listener:
   addr: :80
 
-cop:
-  disabled: true
-  endpoint: "http://..."
-  upstream: "http://..."
-  service_name: points-svc
-  service_port: 80
-
 event_types:
   types:
     - name: get_poh
       title: Get PoH credential
       reward: 50
-      description: Lorem ipsum dolor sit amet
+      description: Prove that you are human
       frequency: one-time
+    - name: free_weekly
+      title: Free weekly points
+      reward: 100
+      frequency: weekly
+      description: |
+        ## Free Weekly Points
+        
+        This is markdown sample.
+        
+        ### How it works
+        
+        - Users are eligible to participate once every week.
+        - Upon participation, users will receive 100 points.
+        - These points can be used for various features in the application.
     - name: daily_login
       title: Daily login
       reward: 5
-      description: Lorem ipsum dolor sit amet
       frequency: daily
-    - name: verify_proof
-      title: Verify proof {:id}
-      reward: 10
-      frequency: unlimited
-      description: Lorem ipsum dolor sit amet
+      description: Login every day
+      disabled: true
+    - name: be_referred
+      title: Referral welcome bonus
+      reward: 5
+      frequency: one-time
+      description: Be referred by a friend and get a welcome bonus
       no_auto_open: true
+    - name: referral_common
+      title: Refer new users
+      reward: 25
+      frequency: one-time
+      description: Refer friends and get a reward for each friend who verifies the passport
+      disabled: true
+    - name: referral_specific
+      title: Refer user {:did}
+      reward: 25
+      frequency: unlimited
+      description: The user {:did} has verified the passport. Claim the reward!
+      no_auto_open: true
+      disabled: true
 
 auth:
   addr: http://rarime-auth
@@ -47,6 +68,7 @@ withdrawal:
 sbt_check:
   networks:
     - name: polygon
+      disabled: true
       rpc: https://your-rpc
       contract: 0x7DdAde70efADf832A600ba483FAD26fCA477FE2A
       request_timeout: 5s

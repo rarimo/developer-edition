@@ -232,7 +232,7 @@ services:
       - link-data:/pgdata
 
   rarime-auth:
-    image: ghcr.io/rarimo/rarime-auth-svc:v0.0.1-rc10
+    image: ghcr.io/rarimo/auth-svc:v1.0.0-rc2
     restart: on-failure
     ports:
       - "9030:80"
@@ -240,7 +240,7 @@ services:
       - ./config/rarime-auth.yaml:/config.yaml
     environment:
       - KV_VIPER_FILE=/config.yaml
-    entrypoint: sh -c "rarime-auth-svc run service"
+    entrypoint: sh -c "auth-svc run service"
 
   #
   #

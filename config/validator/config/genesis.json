@@ -130,6 +130,16 @@
             "sequence": "0"
           },
           "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        },
+        {
+          "@type": "/ethermint.types.v1.EthAccount",
+          "base_account": {
+            "address": "rarimo1ghcxdrgmy8duq8cu68fgmlp2sfmfwkh2dl4chl",
+            "pub_key": null,
+            "account_number": "0",
+            "sequence": "0"
+          },
+          "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
         }
       ]
     },
@@ -148,6 +158,15 @@
             {
               "denom": "urmo",
               "amount": "10000000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "rarimo1ghcxdrgmy8duq8cu68fgmlp2sfmfwkh2dl4chl",
+          "coins": [
+            {
+              "denom": "urmo",
+              "amount": "12700000000000000"
             }
           ]
         },

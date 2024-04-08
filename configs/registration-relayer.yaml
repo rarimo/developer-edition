@@ -1,0 +1,20 @@
+network:
+  rpc: ""
+  registration: ""
+  lightweight_state: ""
+  vault_address: "http://vault:8201"
+  vault_mount_path: "secret"
+
+log:
+  level: debug
+  disable_sentry: true
+
+listener:
+  addr: :8000
+
+cop:
+  disabled: true
+  endpoint: "http://..."
+  upstream: "http://..."
+  service_name: registration-relayer
+  service_port: 80

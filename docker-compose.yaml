@@ -1,0 +1,32 @@
+version: "3.3"
+
+services:
+  vault:
+    image: vault:1.13.3
+    container_name: vault
+    environment:
+      VAULT_ADDR: 'http://0.0.0.0:8201'
+      VAULT_LOCAL_CONFIG: '{"listener": [{"tcp":{"address": "0.0.0.0:8201","tls_disable": true}}], "default_lease_ttl": "168h", "max_lease_ttl": "720h"}}'
+      VAULT_DEV_ROOT_TOKEN_ID: '00000000-0000-0000-0000-000000000000'
+      VAULT_TOKEN: '00000000-0000-0000-0000-000000000000'
+    ports:
+      - "8201:8201"
+    cap_add:
+      - IPC_LOCK
+
+  registration-relayer:
+    depends_on:
+      vault:
+        condition: service_started
+    restart: always
+    hostname: registration-relayer
+    image: ghcr.io/rarimo/registration-relayer:v0.1.0
+    environment:
+      KV_VIPER_FILE: '/configs/config.yaml'
+      VAULT_TOKEN: 00000000-0000-0000-0000-000000000000
+    ports:
+      - "8000:8000"
+    entrypoint: registration-relayer run service
+    volumes:
+      - "./configs/registration-relayer.yaml:/configs/config.yaml"
+      

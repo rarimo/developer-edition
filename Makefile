@@ -2,9 +2,9 @@ ISSUER_PRIVATE_KEY=0xafd025fa9020e189496bfd2a9d47316490c2940a11e4bfd4086e3dd98ca
 
 all: prepare-env
 	docker compose up -d vault
-	sleep 15
+	sleep 10
 	docker compose up -d vault-init validator
-	sleep 15
+	sleep 10
 	@keygen=false $(MAKE) tss-all
 	key=$(subst 0x,,$(ISSUER_PRIVATE_KEY)) $(MAKE) issuer
 	docker compose up -d rarime-orgs-db rarime-link-db
@@ -17,6 +17,8 @@ prepare-env:
 
 # usage: make keygen=true tss-all (keygen is optional, running without it by default)
 tss-all:
+	docker compose up -d tss-{1..4}-db
+	sleep 5
 ifeq ($(keygen), true)
 	TSS_MODE=keygen docker compose up -d tss-{1..4}
 	sleep 5

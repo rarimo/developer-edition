@@ -34,6 +34,36 @@
         {
           "@type": "/ethermint.types.v1.EthAccount",
           "base_account": {
+            "address": "rarimo1l2vdscjfm289mdxnlnvfwscku4w2l3ljt97kdq",
+            "pub_key": null,
+            "account_number": "0",
+            "sequence": "0"
+          },
+          "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        },
+        {
+          "@type": "/ethermint.types.v1.EthAccount",
+          "base_account": {
+            "address": "rarimo1cqtx4qdtdemula69hpv9ksvg769u0tujgqqyhc",
+            "pub_key": null,
+            "account_number": "0",
+            "sequence": "0"
+          },
+          "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        },
+        {
+          "@type": "/ethermint.types.v1.EthAccount",
+          "base_account": {
+            "address": "rarimo13xrlm9cg8ugp327qr0a4k2r9fvkqrsvtm9pcsn",
+            "pub_key": null,
+            "account_number": "0",
+            "sequence": "0"
+          },
+          "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        },
+        {
+          "@type": "/ethermint.types.v1.EthAccount",
+          "base_account": {
             "account_number": "22",
             "address": "rarimo1qlyq3ej7j7rrkw6sluz658pzne88ymf66vjcap",
             "pub_key": null,
@@ -142,6 +172,33 @@
         "default_send_enabled": true
       },
       "balances": [
+        {
+          "address": "rarimo1l2vdscjfm289mdxnlnvfwscku4w2l3ljt97kdq",
+          "coins": [
+            {
+              "denom": "urmo",
+              "amount": "1000000000000"
+            }
+          ]
+        },
+        {
+          "address": "rarimo1cqtx4qdtdemula69hpv9ksvg769u0tujgqqyhc",
+          "coins": [
+            {
+              "denom": "urmo",
+              "amount": "1000000000000"
+            }
+          ]
+        },
+        {
+          "address": "rarimo13xrlm9cg8ugp327qr0a4k2r9fvkqrsvtm9pcsn",
+          "coins": [
+            {
+              "denom": "urmo",
+              "amount": "1000000000000"
+            }
+          ]
+        },
         {
           "address": "rarimo1q5wjzf8kfpxx3xze987ajjkr69rktk64a0wqqp",
           "coins": [
@@ -535,9 +592,43 @@
     "params": null,
     "rarimocore": {
       "params": {
-        "keyECDSA": "",
-        "threshold": "0",
-        "parties": [],
+        "keyECDSA": "0x928d7a512b18fcbfd51c1b050e2d498f962e2c244bb7495e253731cddcfd164ef32c213e3b4fd4185d1de33dd596061473392aa73b532906e553e543801c0f3a",
+        "threshold": "2",
+        "parties": [
+          {
+            "pubKey": "0xb7e8d31ac044cae1ae0ad6f440c25bdf313828b3dd048bc290a8f839c41dd62b50f50693ac4c36ffea12b43e4b59c694a69f2e25a3a4b3135a444df6b5dd6423",
+            "address": "tss-1:9000",
+            "account": "rarimo1l2vdscjfm289mdxnlnvfwscku4w2l3ljt97kdq",
+            "status": "Active",
+            "violationsCount": 0,
+            "freezeEndBlock": 0,
+            "delegator": "",
+            "committedGlobalPublicKey": "",
+            "reportedSessions": []
+          },
+          {
+            "pubKey": "0x4b5139cecb56617c32133885bc7b93da9900e3bf6e5e6d7ce012780f668f1379f5f2fe1a9b40a36421104b6873c53f353aaaa1a696c19099022c290cbc6c8b89",
+            "address": "tss-2:9000",
+            "account": "rarimo1cqtx4qdtdemula69hpv9ksvg769u0tujgqqyhc",
+            "status": "Active",
+            "violationsCount": 0,
+            "freezeEndBlock": 0,
+            "delegator": "",
+            "committedGlobalPublicKey": "",
+            "reportedSessions": []
+          },
+          {
+            "pubKey": "0xc674cc7a7ec0ceacc7723e7a807c09ffe44b84bbb45de1c586dbc3fcc3724c71bbd9dba4fcf977772128f9e8c4b2f6b345f3d8ad944e853dc352a6eb343d1775",
+            "address": "tss-3:9000",
+            "account": "rarimo13xrlm9cg8ugp327qr0a4k2r9fvkqrsvtm9pcsn",
+            "status": "Active",
+            "violationsCount": 0,
+            "freezeEndBlock": 0,
+            "delegator": "",
+            "committedGlobalPublicKey": "",
+            "reportedSessions": []
+          }
+        ],
         "isUpdateRequired": false,
         "lastSignature": "0x00",
         "stakeAmount": "1000000",

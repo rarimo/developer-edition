@@ -1,14 +1,15 @@
 ISSUER_PRIVATE_KEY=0xafd025fa9020e189496bfd2a9d47316490c2940a11e4bfd4086e3dd98ca36dd5
 
 all: prepare-env
-	docker compose up -d vault vault-init validator
+	docker compose up -d vault
 	sleep 15
-	docker compose up -d tss-stake
-	@keygen=true $(MAKE) tss-all
-	#key=$(subst 0x,,$(ISSUER_PRIVATE_KEY)) $(MAKE) issuer
-	#docker compose up -d rarime-orgs-db rarime-link-db
-	#sleep 3
-	#docker compose up -d rarime-orgs rarime-link
+	docker compose up -d vault-init validator
+	sleep 15
+	@keygen=false $(MAKE) tss-all
+	key=$(subst 0x,,$(ISSUER_PRIVATE_KEY)) $(MAKE) issuer
+	docker compose up -d rarime-orgs-db rarime-link-db
+	sleep 3
+	docker compose up -d rarime-orgs rarime-link
 
 prepare-env:
 	@ls config/.env-api > /dev/null 2>&1 || cp config/env-api.sample config/.env-api
@@ -17,13 +18,13 @@ prepare-env:
 # usage: make keygen=true tss-all (keygen is optional, running without it by default)
 tss-all:
 ifeq ($(keygen), true)
-	TSS_MODE=keygen docker compose up -d tss-1 tss-2 tss-3 tss-4
+	TSS_MODE=keygen docker compose up -d tss-{1..4}
 	sleep 5
 	docker compose logs tss-1
-	docker compose down tss-1 tss-2 tss-3 tss-4
-	TSS_MODE=service docker compose up -d tss-1 tss-2 tss-3 tss-4
+	docker compose down tss-{1..4}
+	TSS_MODE=service docker compose up -d tss-{1..4}
 else
-	TSS_MODE=service docker compose up -d tss-1 tss-2 tss-3 tss-4
+	TSS_MODE=service docker compose up -d tss-{1..4}
 endif
 
 # usage: make n=1 keygen=true tss-single (keygen is optional, running without it by default)

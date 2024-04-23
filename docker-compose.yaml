@@ -8,7 +8,7 @@ services:
   #
 
   validator:
-    image: ghcr.io/rarimo/rarimo-core:v1.1.0
+    image: ghcr.io/rarimo/rarimo-core:9219c4e45f502f6557ea150edf3980ba25596193
     entrypoint: sh -c "rarimo-core start --home=/usr/local/bin/genesis --rpc.laddr tcp://0.0.0.0:26657 --p2p.external-address tcp://validator:26656"
     volumes:
       - ./config/validator/config:/usr/local/bin/genesis/config
@@ -27,7 +27,7 @@ services:
   #
 
   tss-1:
-    image: ghcr.io/rarimo/tss-svc:v1.0.11
+    image: ghcr.io/rarimo/tss-svc:v1.0.12
     restart: on-failure
     depends_on:
       - tss-1-db
@@ -58,7 +58,7 @@ services:
       - tss-1-data:/pgdata
 
   tss-2:
-    image: ghcr.io/rarimo/tss-svc:v1.0.11
+    image: ghcr.io/rarimo/tss-svc:v1.0.12
     restart: on-failure
     depends_on:
       - tss-2-db
@@ -88,7 +88,7 @@ services:
       - tss-2-data:/pgdata
 
   tss-3:
-    image: ghcr.io/rarimo/tss-svc:v1.0.11
+    image: ghcr.io/rarimo/tss-svc:v1.0.12
     restart: on-failure
     depends_on:
       - tss-3-db
@@ -118,7 +118,7 @@ services:
       - tss-3-data:/pgdata
 
   tss-4:
-    image: ghcr.io/rarimo/tss-svc:v1.0.11
+    image: ghcr.io/rarimo/tss-svc:v1.0.12
     restart: on-failure
     depends_on:
       - tss-4-db
@@ -170,7 +170,7 @@ services:
     entrypoint: /vault-init.sh
   
   tss-stake:
-    image: ghcr.io/rarimo/rarimo-core:v1.1.0
+    image: ghcr.io/rarimo/rarimo-core:9219c4e45f502f6557ea150edf3980ba25596193
     depends_on:
       - validator
     volumes:
@@ -179,7 +179,7 @@ services:
     entrypoint: /tss-stake.sh
     
   rarime-orgs:
-    image: ghcr.io/rarimo/rarime-orgs-svc:v0.7.6
+    image: ghcr.io/rarimo/rarime-orgs-svc:v0.7.8
     restart: on-failure
     depends_on:
       - rarime-orgs-db
@@ -205,7 +205,7 @@ services:
       - orgs-data:/pgdata
   
   rarime-link:
-    image: ghcr.io/rarimo/rarime-link-svc:v0.3.0-rc7
+    image: ghcr.io/rarimo/rarime-link-svc:v0.3.2
     restart: on-failure
     depends_on:
       - rarime-link-db

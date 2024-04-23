@@ -160,6 +160,16 @@
             "sequence": "0"
           },
           "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        },
+        {
+          "@type": "/ethermint.types.v1.EthAccount",
+          "base_account": {
+            "address": "rarimo1ghcxdrgmy8duq8cu68fgmlp2sfmfwkh2dl4chl",
+            "pub_key": null,
+            "account_number": "0",
+            "sequence": "0"
+          },
+          "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
         }
       ]
     },
@@ -209,6 +219,19 @@
           ]
         },
         {
+          "address": "rarimo1ghcxdrgmy8duq8cu68fgmlp2sfmfwkh2dl4chl",
+          "coins": [
+            {
+              "denom": "stake",
+              "amount": "7000000000000"
+            },
+            {
+              "denom": "urmo",
+              "amount": "12700000000000000"
+            }
+          ]
+        },
+        {
           "address": "rarimo1e4fjh2ks6qanjg9trveule4tss4zn76f6vfnme",
           "coins": [
             {
@@ -236,6 +259,15 @@
         "denom": "urmo",
         "amount": "1000"
       }
+    },
+    "cscalist": {
+      "params": {
+        "rootKey": "",
+        "rootUpdated": false,
+        "updatedAtBlock": 0,
+        "lastUpdateOperationIndex": ""
+      },
+      "tree": []
     },
     "distribution": {
       "params": {
@@ -412,11 +444,11 @@
                 },
                 "value": {
                   "denom": "urmo",
-                  "amount": "1000000"
+                  "amount": "3000000000"
                 }
               }
             ],
-            "memo": "25eca14d9e957004f2a7ca931bf25eda3ce91a4e@192.168.0.147:26656",
+            "memo": "25eca14d9e957004f2a7ca931bf25eda3ce91a4e@192.168.88.186:26656",
             "timeout_height": "0",
             "extension_options": [],
             "non_critical_extension_options": []
@@ -438,14 +470,14 @@
             ],
             "fee": {
               "amount": [],
-              "gas_limit": "200000",
+              "gas_limit": "99999999",
               "payer": "",
               "granter": ""
             },
             "tip": null
           },
           "signatures": [
-            "f/62fqPWmXT6wRlNij5smOPLfnbr6qtoczyTtYxKkFxzeLcyYrPD7psbSav9+vGvKJHli2SFZs99HC3RdzyWmQ=="
+            "m5/KOch4kV+EfspSdF9E+n0SUUaosE1gfEhi1p1hExUYBvpPIAHnf/Qq1bdWsKw9RcbEFqNbqa9dTPRwIMbObQ=="
           ]
         }
       ]
@@ -465,7 +497,7 @@
         "max_deposit_period": "34560"
       },
       "voting_params": {
-        "voting_period": "34560"
+        "voting_period": "5"
       },
       "tally_params": {
         "quorum": "0.334000000000000000",

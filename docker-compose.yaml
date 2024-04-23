@@ -8,7 +8,7 @@ services:
   #
 
   validator:
-    image: ghcr.io/rarimo/rarimo-core:v1.1.1-rc1
+    image: ghcr.io/rarimo/rarimo-core:9219c4e45f502f6557ea150edf3980ba25596193
     entrypoint: sh -c "rarimo-core start --home=/usr/local/bin/genesis --rpc.laddr tcp://0.0.0.0:26657 --p2p.external-address tcp://validator:26656"
     volumes:
       - ./config/validator/config:/usr/local/bin/genesis/config
@@ -170,7 +170,7 @@ services:
     entrypoint: /vault-init.sh
   
   tss-stake:
-    image: ghcr.io/rarimo/rarimo-core:v1.1.1-rc1
+    image: ghcr.io/rarimo/rarimo-core:9219c4e45f502f6557ea150edf3980ba25596193
     depends_on:
       - validator
     volumes:

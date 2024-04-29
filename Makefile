@@ -20,18 +20,24 @@ prepare-env:
 # usage: make keygen=true tss-all (keygen is optional, running without it by default)
 tss-all:
 ifeq ($(keygen), true)
-	TSS_MODE=keygen docker compose up -d tss-{1..4}
+	docker compose up -d tss-1-db tss-2-db tss-3-db tss-4-db
+	sleep 5
+	TSS_MODE=keygen docker compose up -d tss-1 tss-2 tss-3 tss-4
 	sleep 5
 	docker compose logs tss-1
-	docker compose down tss-{1..4}
-	TSS_MODE=service docker compose up -d tss-{1..4}
+	docker compose down tss-1 tss-2 tss-3 tss-4
+	TSS_MODE=service docker compose up -d tss-1 tss-2 tss-3 tss-4
 else
-	TSS_MODE=service docker compose up -d tss-{1..4}
+	docker compose up -d tss-1-db tss-2-db tss-3-db tss-4-db
+	sleep 5
+	TSS_MODE=service docker compose up -d tss-1 tss-2 tss-3 tss-4
 endif
 
 # usage: make n=1 keygen=true tss-single (keygen is optional, running without it by default)
 tss-single:
 ifeq ($(keygen), true)
+	docker compose up -d tss-$(n)-db
+	sleep 5
 	TSS_MODE=keygen docker compose up -d tss-$(n)
 	sleep 5
 	docker compose logs tss-$(n)
